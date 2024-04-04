@@ -6,6 +6,11 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, year, to_date, avg, round, sum, explode, array, when
 import os
 
+"""
+Spark alternative to preprocessing
+"""
+
+
 def convert_to_csv(input_file, output_file):
     df_excel = pd.read_excel(input_file)
     df_excel.to_csv(output_file, index=False)

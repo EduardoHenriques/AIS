@@ -7,6 +7,10 @@ from pyspark.sql.functions import col, year, to_date, avg, round, sum, explode, 
 import os
 
 
+"""
+Spark version of the merge operation. Run after the preprocessing script.
+"""
+
 if __name__ == "__main__":
     # Spark Config
     conf = SparkConf()
