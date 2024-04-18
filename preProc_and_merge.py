@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import time, os
-
+from currency_conversion import currency_convert
 """
 Python(pandas) script to preprocess and merge
 the datasets for the Data Science project.
@@ -11,72 +11,18 @@ start_time1 = time.time()
 
 
 currency_codes = {
-    'AFN': 'AFN', 'Lek': 'ALL', 'DZD': 'DZD',
-    '$': 'USD',
-    'ARS': 'ARS',
-    'AMD': 'AMD',
-    'man':  "AZN",
-    '৳': 'BDT',
-    'BYN': 'BYN',
-    'CFA': 'XOF',
-    'Nu.': 'BTN',
-    '₹': 'INR',
-    'Bs.': 'BOB',
-    'P': 'BWP',
-    'R$': 'BRL',
-    'лв': 'BGN',
-    'FBu': 'BIF',
-    '¥': 'JPY',
-    'Col$': 'COP',
-    '₡': 'CRC',
-    'Fdj': 'DJF',
-    'EC$': 'XCD',
-    'RD$': 'DOP',
-    'FJ$': 'FJD',
-    'GEL': 'GEL',
-    '₵': 'GHS',
-    'Q': 'GTQ',
-    'GY$': 'GYD',
-    'Rp': 'IDR',
-    'IQD': 'IQD',
-    'J$': 'JMD',
-    'JOD': 'JOD',
-    '₸': 'KZT',
-    'KSh': 'KES',
-    'L£': 'LBP',
-    'R': 'ZAR',
-    'Ar': 'USD',  
-    'MK': 'MKD',
-    'Rf': 'MVR',
-    'UM': 'MRO',
-    'Rs': 'MUR',
-    'MXN': 'MXN',
-    'L': 'LKR',
-    '₮': 'MNT',
-    '€': 'EUR',
-    'MAD': 'MAD',
-    'MT': 'MZN',
-    'N₨': 'NPR',
-    '₦': 'NGN',
-    'ден': 'MKD', 
-    'Rs.': 'PKR',
-    'K': 'PGK',
-    'Gs': 'PYG',
-    'S/.': 'PEN',
-    '₱': 'PHP',
-    'RF': 'MVR',  
-    'Дин': 'RSD',
-    'SI$': 'SBD',
-    'SRD': 'SRD',
-    'SM': 'SOS',
-    'TSh': 'TZS',
-    '฿': 'THB',
-    'T$': 'TOP',
-    'DT': 'TND',
-    'm': "TMT",
-    'USh': 'UGX',
-    '₴': 'UAH',
-    'VT': 'VUV'
+    'AFN': 'AFN', 'Lek': 'ALL', 'DZD': 'DZD', '$': 'USD', 'ARS': 'ARS',
+    'AMD': 'AMD', 'man':  "AZN", '৳': 'BDT', 'BYN': 'BYN', 'CFA': 'XOF',
+    'Nu.': 'BTN', '₹': 'INR', 'Bs.': 'BOB', 'P': 'BWP', 'R$': 'BRL', 'лв': 'BGN',
+    'FBu': 'BIF', '¥': 'JPY', 'Col$': 'COP', '₡': 'CRC', 'Fdj': 'DJF', 'EC$': 'XCD',
+    'RD$': 'DOP', 'FJ$': 'FJD', 'GEL': 'GEL', '₵': 'GHS', 'Q': 'GTQ', 'GY$': 'GYD',
+    'Rp': 'IDR', 'IQD': 'IQD', 'J$': 'JMD', 'JOD': 'JOD', '₸': 'KZT', 'KSh': 'KES',
+    'L£': 'LBP', 'R': 'ZAR', 'Ar': 'USD', 'MK': 'MKD', 'Rf': 'MVR', 'UM': 'MRO',
+    'Rs': 'MUR', 'MXN': 'MXN', 'L': 'LKR', '₮': 'MNT', '€': 'EUR', 'MAD': 'MAD',
+    'MT': 'MZN', 'N₨': 'NPR', '₦': 'NGN', 'ден': 'MKD',  'Rs.': 'PKR', 'K': 'PGK',
+    'Gs': 'PYG', 'S/.': 'PEN', '₱': 'PHP', 'RF': 'MVR', 'Дин': 'RSD', 'SI$': 'SBD',
+    'SRD': 'SRD', 'SM': 'SOS', 'TSh': 'TZS', '฿': 'THB', 'T$': 'TOP', 'DT': 'TND',
+    'm': "TMT", 'USh': 'UGX', '₴': 'UAH', 'VT': 'VUV'
 }
 
 
@@ -190,7 +136,10 @@ merged_df.drop(columns= ['Country Code'], inplace=True)
 merged_df = merged_df[~merged_df.eq('..').any(axis=1)] # Remove rows with '..' values
 merged_df['Value[DEBT]'] = pd.to_numeric(merged_df['Value[DEBT]'], errors='coerce')
 
+print(merged_df.shape)
 merged_df['local_currency'] = merged_df['local_currency'].map(currency_codes)
+merged_df = currency_convert(merged_df)
+print(merged_df.shape)
 
 merged_df.to_csv('dataset/Merged.csv', index=False)
 # merged_df['Value[DEBT]'] = merged_df['Value[DEBT]'].astype(float)
@@ -204,9 +153,6 @@ elapsed_time2 = end_time2 - start_time2
 print(f"Tempo merge {elapsed_time2}")
 
 merged_df.info()
-
-print(merged_df['Value[DEBT]'])
-
 
 
 # PARA IMPORTAR PARA O CASSANDRA:
