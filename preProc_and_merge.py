@@ -9,6 +9,80 @@ the datasets for the Data Science project.
 
 start_time1 = time.time()
 
+
+currency_codes = {
+    'AFN': 'AFN', 'Lek': 'ALL', 'DZD': 'DZD',
+    '$': 'USD',
+    'ARS': 'ARS',
+    'AMD': 'AMD',
+    'man':  "AZN",
+    '৳': 'BDT',
+    'BYN': 'BYN',
+    'CFA': 'XOF',
+    'Nu.': 'BTN',
+    '₹': 'INR',
+    'Bs.': 'BOB',
+    'P': 'BWP',
+    'R$': 'BRL',
+    'лв': 'BGN',
+    'FBu': 'BIF',
+    '¥': 'JPY',
+    'Col$': 'COP',
+    '₡': 'CRC',
+    'Fdj': 'DJF',
+    'EC$': 'XCD',
+    'RD$': 'DOP',
+    'FJ$': 'FJD',
+    'GEL': 'GEL',
+    '₵': 'GHS',
+    'Q': 'GTQ',
+    'GY$': 'GYD',
+    'Rp': 'IDR',
+    'IQD': 'IQD',
+    'J$': 'JMD',
+    'JOD': 'JOD',
+    '₸': 'KZT',
+    'KSh': 'KES',
+    'L£': 'LBP',
+    'R': 'ZAR',
+    'Ar': 'USD',  
+    'MK': 'MKD',
+    'Rf': 'MVR',
+    'UM': 'MRO',
+    'Rs': 'MUR',
+    'MXN': 'MXN',
+    'L': 'LKR',
+    '₮': 'MNT',
+    '€': 'EUR',
+    'MAD': 'MAD',
+    'MT': 'MZN',
+    'N₨': 'NPR',
+    '₦': 'NGN',
+    'ден': 'MKD', 
+    'Rs.': 'PKR',
+    'K': 'PGK',
+    'Gs': 'PYG',
+    'S/.': 'PEN',
+    '₱': 'PHP',
+    'RF': 'MVR',  
+    'Дин': 'RSD',
+    'SI$': 'SBD',
+    'SRD': 'SRD',
+    'SM': 'SOS',
+    'TSh': 'TZS',
+    '฿': 'THB',
+    'T$': 'TOP',
+    'DT': 'TND',
+    'm': "TMT",
+    'USh': 'UGX',
+    '₴': 'UAH',
+    'VT': 'VUV'
+}
+
+
+
+
+
 # Function to convert Excel to CSV using pandas
 def convert_to_csv(input_file, output_file):
     df_excel = pd.read_excel(input_file)
@@ -68,7 +142,7 @@ df2.to_csv('src/Saude_Nutricao.csv', index=False)
 print("Dataset 2 Processed")
 
 # Dataset 3 - PRECOS COMIDA
-df3 = pd.read_csv('src/Food_Prices.csv', encoding='ISO-8859-1')
+df3 = pd.read_csv('src/Food_Prices.csv', encoding='utf-8')
 df3 = df3[~df3['Date'].str.contains('2023|2024')]
 df3['Year'] = df3['Date'].str[:4]
 df3 = df3.drop(columns=['Date'])
@@ -115,6 +189,9 @@ merged_df.rename(columns = {'Amount_x': 'Value[DEBT]', 'Amount_y': 'Value[HEALTH
 merged_df.drop(columns= ['Country Code'], inplace=True)
 merged_df = merged_df[~merged_df.eq('..').any(axis=1)] # Remove rows with '..' values
 merged_df['Value[DEBT]'] = pd.to_numeric(merged_df['Value[DEBT]'], errors='coerce')
+
+merged_df['local_currency'] = merged_df['local_currency'].map(currency_codes)
+
 merged_df.to_csv('dataset/Merged.csv', index=False)
 # merged_df['Value[DEBT]'] = merged_df['Value[DEBT]'].astype(float)
 print("Merged Dataset Processed")
@@ -158,24 +235,5 @@ print(merged_df['Value[DEBT]'])
 
 
 
-# CREATE TABLE IF NOT EXISTS ais_keyspace.paises (
-#     id UUID PRIMARY KEY,
-#     country_name TEXT,
-#     iso3 TEXT,
-#     label TEXT,
-#     baseline_local DOUBLE,
-#     local_price DOUBLE,
-#     variation_local DOUBLE,
-#     local_currency TEXT,
-#     local_range TEXT,
-#     year INT,
-#     local_price_mean DOUBLE,
-#     series_name_health_nutrition TEXT,
-#     series_code_health_nutrition TEXT,
-#     value_debt DOUBLE,
-#     counterpart_area_name TEXT,
-#     counterpart_area_code TEXT,
-#     series_name_external_debt TEXT,
-#     series_code_external_debt TEXT,
-#     value_health DOUBLE
-# );
+
+
