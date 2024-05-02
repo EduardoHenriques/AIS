@@ -16,6 +16,7 @@ def currency_convert(df):
 
     conversion_rates = data['conversion_rates']
     conversion_rates_keys = list(conversion_rates.keys())
+    print(conversion_rates_keys)
 
     codes = ['AFN', 'ALL', 'DZD', 'USD', 'ARS', 'AMD', 'AZN', 'BDT', 'BYN', 'XOF', 'BTN', 'INR',
     'BOB', 'BWP', 'BRL', 'BGN', 'BIF', 'JPY', 'COP', 'CRC', 'DJF', 'XCD', 'DOP', 'FJD',
@@ -25,13 +26,12 @@ def currency_convert(df):
     'TND', 'TMT', 'UGX', 'UAH', 'VUV']
 
     missing_codes = set(codes) - set(conversion_rates_keys)
-    print(missing_codes)
-    
-    for code in missing_codes:
-        df = df[df['local_currency'] != code]
-    
+    print("Missing codes removed")
+    print("Changing ¥ in China to CNY insteaf of JPY")
+    df.loc[df['Country Name'] == 'China', 'local_currency'] = 'CNY'
     
     
+    print(df['local_currency'].unique())
     df.loc[:,'local_price'] = df['local_price'].astype(float) / df['local_currency'].map(conversion_rates)
     df.loc[:,'baseline_local'] = df['local_price'].astype(float) / df['local_currency'].map(conversion_rates)
     df.loc[:,'local_price_mean'] = df['local_price'].astype(float) / df['local_currency'].map(conversion_rates)

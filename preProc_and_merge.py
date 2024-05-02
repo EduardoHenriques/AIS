@@ -136,10 +136,10 @@ merged_df.drop(columns= ['Country Code'], inplace=True)
 merged_df = merged_df[~merged_df.eq('..').any(axis=1)] # Remove rows with '..' values
 merged_df['Value[DEBT]'] = pd.to_numeric(merged_df['Value[DEBT]'], errors='coerce')
 
-print(merged_df.shape)
+# print(merged_df.shape)
 merged_df['local_currency'] = merged_df['local_currency'].map(currency_codes)
 merged_df = currency_convert(merged_df)
-print(merged_df.shape)
+# print(merged_df.shape)
 
 merged_df.to_csv('dataset/Merged.csv', index=False)
 # merged_df['Value[DEBT]'] = merged_df['Value[DEBT]'].astype(float)
@@ -153,7 +153,7 @@ elapsed_time2 = end_time2 - start_time2
 print(f"Tempo merge {elapsed_time2}")
 
 merged_df.info()
-
+# print(merged_df.head())
 
 # PARA IMPORTAR PARA O CASSANDRA:
  #   Column                           Dtype           Cassandra 
